@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "223987583866",
+    "project_id": "hacktivatorsff",
+    "storage_bucket": "hacktivatorsff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:223987583866:android:a6d6a48c708dda5e20e4c3",
+        "android_client_info": {
+          "package_name": "com.mycompany.hacktivatorshfapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASqKKdV_OvftFtOxeHSNo3bdt6_IHq05E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
