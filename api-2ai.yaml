@@ -1,0 +1,120 @@
+openapi: 3.0.0
+info:
+  title: Elevenlabs Integration API
+  version: v1
+
+paths:
+  /text-to-speech:
+    post:
+      summary: Convert text to speech using Elevenlabs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text: 
+                  type: string
+                voice_id: 
+                  type: string
+      responses:
+        '200':
+          description: Successful audio generation
+          content:
+            audio/mpeg:
+              schema:
+                type: string
+                format: binary 
+
+  /store-audio:
+    post:
+      summary: Store audio in Firebase Storage
+      requestBody:
+        required: true
+        content:
+          multipart/form-data: 
+            schema:
+              type: object
+              properties:
+                audio:
+                  type: string
+                  format: binary
+                filename:
+                  type: string
+      responses:
+        '201':
+          description: Audio successfully stored
+
+  /get-conversation:
+    get:
+      summary: Retrieve conversation from Firebase
+      parameters:
+        - in: query
+          name: conversationId
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Conversation retrieved
+          content:
+            application/json:
+              schema:
+                # Define your conversation data structure
+                type: array
+                items:
+                  type: object
+                  properties:
+                    speaker: 
+                      type: string # (e.g., "user" or "gemini")
+                    message: 
+                      type: string
+                    timestamp: 
+                      type: string
+                      format: date-time 
+
+  /send-to-gemini:
+    post:
+      summary: Send message to Gemini
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                conversation_id:
+                  type: string
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Message sent to Gemini
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string 
+
+  /get-gemini-response:
+    get:
+      summary: Get response from Gemini
+      parameters:
+        - in: query
+          name: conversation_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Gemini response retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
