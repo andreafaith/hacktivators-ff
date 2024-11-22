@@ -1,0 +1,160 @@
+openapi: 3.0.0
+info:
+  title: AI Chat API
+  version: v1
+
+paths:
+  /generate-speech:
+    post:
+      summary: Convert text to speech using Elevenlabs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: The text to be converted to speech
+                voice_id:
+                  type: string
+                  description: (Optional) The ID of the voice to use. Defaults to the configured default voice.
+      responses:
+        '200':
+          description: Successful audio generation. Returns the URL of the generated audio file in Firebase Storage.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  audioUrl:
+                    type: string
+                    format: url
+
+  /save-message:
+    post:
+      summary: Save a message to the conversation in Firestore
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                conversationId:
+                  type: string
+                  description: The ID of the conversation
+                message:
+                  type: string
+                  description: The text message
+                audioUrl:
+                  type: string
+                  format: url
+                  description: The URL of the audio file for the message
+                sender:
+                  type: string
+                  description: The sender of the message ("user" or "assistant")
+                geminiResponse:
+                  type: string
+                  description: (Optional) The response from Gemini
+                geminiAudioUrl:
+                  type: string
+                  format: url
+                  description: (Optional) The URL of the audio file for Gemini's response
+      responses:
+        '200':
+          description: Message successfully saved
+
+  /get-conversation:
+    get:
+      summary: Retrieve conversation history from Firestore
+      parameters:
+        - in: query
+          name: conversationId
+          schema:
+            type: string
+          required: true
+          description: The ID of the conversation
+      responses:
+        '200':
+          description: Conversation history retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    audioUrl:
+                      type: string
+                      format: url
+                    sender:
+                      type: string
+                    timestamp:
+                      type: string
+                      format: date-time
+                    geminiResponse:
+                      type: string
+                    geminiAudioUrl:
+                      type: string
+                      format: url
+
+  /send-to-gemini:
+    post:
+      summary: Send a message to Gemini and get a response
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The message to send to Gemini
+                conversationId:
+                  type: string
+                  description: The ID of the conversation
+      responses:
+        '200':
+          description: Gemini response and generated audio URL retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The text response from Gemini
+                  audioUrl:
+                    type: string
+                    format: url
+                    description: The URL of the generated audio for Gemini's response
+
+  /play-audio:
+    post:
+      summary: Play audio from a URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                audioUrl:
+                  type: string
+                  format: url
+                  description: The URL of the audio file to play
+      responses:
+        '200':
+          description: Audio playback started
+
+  /stop-audio:
+    post:
+      summary: Stop audio playback
+      responses:
+        '200':
+          description: Audio playback stopped
