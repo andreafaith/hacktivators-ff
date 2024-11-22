@@ -1,39 +1,61 @@
-{
-  "name": "TextToSpeechAPI",
-  "base_url": "https://southeastasia.api.cognitive.microsoft.com/cognitiveservices/v1",
-  "authentication": {
-    "type": "API_KEY",
-    "key": "6RArDbXJe1KpRXSNC5vmfw3zgrP591r9lYE0z9a94uAIehlfxXeBJQQJ99AKACqBBLyXJ3w3AAAYACOG0lnu"
-  },
-  "endpoints": [
-    {
-      "name": "TextToSpeech",
-      "url": "/cognitiveservices/v1",
-      "method": "POST",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/ssml+xml"
-        },
-        {
-          "key": "X-Microsoft-OutputFormat",
-          "value": "audio-16khz-128kbitrate-mono-mp3"
-        },
-        {
-          "key": "Authorization",
-          "value": "Bearer {{access_token}}"
-        }
-      ],
-      "body": "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:type='ssml'><voice name='{{voice_name}}' language='{{language}}'>{{text_input}}</voice></speak>",
-      "parameters": {
-        "text_input": "{{TextInputTTS}}",
-        "language": "{{Language}}",
-        "voice_name": "{{VNTTS}}"
-      },
-      "response": {
-        "type": "audio",
-        "content_type": "audio/mpeg"
-      }
-    }
-  ]
-}
+openapi: 3.0.0
+info:
+  title: Text-to-Speech API
+  description: API to convert text to speech using Azure Cognitive Services.
+  version: 1.0.0
+servers:
+  - url: https://southeastasia.api.cognitive.microsoft.com
+    description: Azure Speech Service API
+paths:
+  /cognitiveservices/v1:
+    post:
+      summary: Convert Text to Speech
+      description: Converts the given text to speech using Azure's Cognitive Services TTS API.
+      operationId: textToSpeech
+      parameters:
+        - name: language
+          in: query
+          description: The language code for the speech output.
+          required: true
+          schema:
+            type: string
+            example: en-US
+        - name: voice_name
+          in: query
+          description: The name of the voice to use for TTS.
+          required: true
+          schema:
+            type: string
+            example: en-US-JessaNeural
+        - name: text_input
+          in: query
+          description: The text to be converted to speech.
+          required: true
+          schema:
+            type: string
+            example: Hello, welcome to ElevatEd!
+      requestBody:
+        content:
+          application/ssml+xml:
+            schema:
+              type: string
+              example: |
+                <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis">
+                  <voice name="{{voice_name}}" language="{{language}}">
+                    {{text_input}}
+                  </voice>
+                </speak>
+      responses:
+        '200':
+          description: Successful response with audio content
+          content:
+            audio/mpeg:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
