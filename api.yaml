@@ -1,61 +1,80 @@
 openapi: 3.0.0
 info:
-  title: Text-to-Speech API
-  description: API to convert text to speech using Azure Cognitive Services.
+  title: Microsoft Cognitive Services Speech API
   version: 1.0.0
+  description: API for Text-to-Speech and Speech-to-Text services
+
 servers:
-  - url: https://southeastasia.api.cognitive.microsoft.com
-    description: Azure Speech Service API
+  - url: https://YOUR_REGION.tts.speech.microsoft.com/cognitiveservices/v1
+
 paths:
-  /cognitiveservices/v1:
+  /text-to-speech:
     post:
-      summary: Convert Text to Speech
-      description: Converts the given text to speech using Azure's Cognitive Services TTS API.
+      summary: Convert text to speech
       operationId: textToSpeech
-      parameters:
-        - name: language
-          in: query
-          description: The language code for the speech output.
-          required: true
-          schema:
-            type: string
-            example: en-US
-        - name: voice_name
-          in: query
-          description: The name of the voice to use for TTS.
-          required: true
-          schema:
-            type: string
-            example: en-US-JessaNeural
-        - name: text_input
-          in: query
-          description: The text to be converted to speech.
-          required: true
-          schema:
-            type: string
-            example: Hello, welcome to ElevatEd!
       requestBody:
+        required: true
         content:
           application/ssml+xml:
             schema:
               type: string
-              example: |
-                <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis">
-                  <voice name="{{voice_name}}" language="{{language}}">
-                    {{text_input}}
-                  </voice>
-                </speak>
+      parameters:
+        - in: query
+          name: language
+          schema:
+            type: string
+          required: true
+          description: The language code for TTS
+        - in: query
+          name: voice
+          schema:
+            type: string
+          required: true
+          description: The voice name for TTS
       responses:
         '200':
-          description: Successful response with audio content
+          description: Successful response
           content:
             audio/mpeg:
               schema:
                 type: string
                 format: binary
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '500':
-          description: Internal server error
+
+  /speech-to-text:
+    post:
+      summary: Convert speech to text
+      operationId: speechToText
+      requestBody:
+        required: true
+        content:
+          audio/wav:
+            schema:
+              type: string
+              format: binary
+      parameters:
+        - in: query
+          name: language
+          schema:
+            type: string
+          required: true
+          description: The language code for STT
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text:
+                    type: string
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Ocp-Apim-Subscription-Key
+
+security:
+  - ApiKeyAuth: []
