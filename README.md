@@ -1,7 +1,7 @@
-# HackTivators - Dyscalculia Learning Assistant
+# AlgoQuest - Dyscalculia Learning Assistant
 
 ## Overview
-HackTivators is an innovative mobile application designed to help people with Dyscalculia learn mathematics through interactive and adaptive learning experiences. Using augmented reality (AR) and speech technologies, the app provides a supportive learning environment tailored to each user's needs.
+AlgoQuest is an innovative mobile application designed to help people with Dyscalculia learn mathematics through interactive and adaptive learning experiences. Using augmented reality (AR) and speech technologies, the app provides a supportive learning environment tailored to each user's needs.
 
 ## Key Features
 
