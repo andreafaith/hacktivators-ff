@@ -1,0 +1,39 @@
+{
+  "name": "TextToSpeechAPI",
+  "base_url": "https://southeastasia.api.cognitive.microsoft.com/cognitiveservices/v1",
+  "authentication": {
+    "type": "API_KEY",
+    "key": "6RArDbXJe1KpRXSNC5vmfw3zgrP591r9lYE0z9a94uAIehlfxXeBJQQJ99AKACqBBLyXJ3w3AAAYACOG0lnu"
+  },
+  "endpoints": [
+    {
+      "name": "TextToSpeech",
+      "url": "/cognitiveservices/v1",
+      "method": "POST",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/ssml+xml"
+        },
+        {
+          "key": "X-Microsoft-OutputFormat",
+          "value": "audio-16khz-128kbitrate-mono-mp3"
+        },
+        {
+          "key": "Authorization",
+          "value": "Bearer {{access_token}}"
+        }
+      ],
+      "body": "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:type='ssml'><voice name='{{voice_name}}' language='{{language}}'>{{text_input}}</voice></speak>",
+      "parameters": {
+        "text_input": "{{TextInputTTS}}",
+        "language": "{{Language}}",
+        "voice_name": "{{VNTTS}}"
+      },
+      "response": {
+        "type": "audio",
+        "content_type": "audio/mpeg"
+      }
+    }
+  ]
+}
